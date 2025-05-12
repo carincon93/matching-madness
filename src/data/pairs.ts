@@ -800,7 +800,7 @@ export const pairs: Pair[] = [
   },
   {
     id: "796c6479-0efe-4d31-afbd-3b909414455d",
-    word: "ie",
+    word: "I mean",
     translation: "es decir",
     week: 2,
   },

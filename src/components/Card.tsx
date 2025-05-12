@@ -18,7 +18,7 @@ export const Card = ({
   return (
     <button
       onClick={onClick}
-      className={`${isMatched ? "animate-fade-out" : "animate-fade-in"}`}
+      className={`${isMatched ? "animate-fade-out" : "animate-fade-in"} btn-game`}
       style={{
         borderColor:
           isIncorrect && isSelected && !isMatched
@@ -45,7 +45,7 @@ export const Card = ({
             ? "#ddf9c2"
             : isSelected
             ? "#dbf3ff"
-            : "transparent",
+            : "#ffffff",
 
         animationDuration: "500ms",
         animationDelay: "100ms",

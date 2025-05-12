@@ -30,7 +30,7 @@ export default defineConfig({
       },
       workbox: {
         navigateFallback: "/matching-madness/index.html",
-        globPatterns: ["**/*.{css,js,html,svg,riv,png,webp,ico,txt}"],
+        globPatterns: ["**/*.{css,js,html,svg,ttf,woff,woff2,eot,png,webp,ico,txt}"],
       },
       devOptions: {
         enabled: true,
