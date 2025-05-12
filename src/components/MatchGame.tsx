@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "./Card";
 import { pairs } from "@/data/pairs";
+import ReactHowler from "react-howler";
 
 type Pair = {
   id: string;
@@ -19,11 +20,14 @@ const pairsByWeek = (week: number) =>
 const initialQueue: Pair[] = pairsByWeek(1);
 
 export const MatchGame = () => {
+  const [soundSrc, setSoundSrc] = useState<string | null>(null);
+  const [playSound, setPlaySound] = useState(false);
   const [principalPairs, setPrincipalPairs] = useState<Pair[]>([]);
   const [queue, setQueue] = useState<Pair[]>([]);
   const [rest, setRest] = useState<Pair[]>([]);
   const [queueIndex, setQueueIndex] = useState(0);
   const [correctPairs, setCorrectPairs] = useState(0);
+  const [isIncorrect, setIsIncorrect] = useState<boolean>(false);
   const [translationColumn, setTranslationColumn] = useState<CardItem[]>([]);
   const [wordColumn, setRightColumn] = useState<CardItem[]>([]);
   const [selected, setSelected] = useState<{
@@ -35,6 +39,8 @@ export const MatchGame = () => {
 
   useEffect(() => {
     if (principalPairs.length > 0) return;
+
+    setSoundSrc("/matching-madness/sounds/correct.ogg");
 
     // Get 5 random pairs from initialQueue
     const randomPairs = initialQueue
@@ -64,9 +70,12 @@ export const MatchGame = () => {
 
   useEffect(() => {
     if (!selected.translation || !selected.word) return;
+    setPlaySound(false);
 
     if (selected.translation === selected.word) {
+      setPlaySound(true);
       setCorrectPairs((prev) => prev + 1);
+
       const translationIndex = translationColumn.findIndex(
         (pair) => pair.id === selected.translation
       );
@@ -102,11 +111,14 @@ export const MatchGame = () => {
       setMatchedIds((prev) =>
         selected.translation ? [...prev, selected.translation] : prev
       );
+    } else {
+      setIsIncorrect(true);
     }
 
     setTimeout(() => {
       setSelected({ translation: undefined, word: undefined });
-    }, 50);
+      setIsIncorrect(false);
+    }, 250);
   }, [selected]);
 
   useEffect(() => {
@@ -126,6 +138,15 @@ export const MatchGame = () => {
 
   return (
     <div className="w-6/12 mx-auto grid grid-cols-2 gap-4">
+      {soundSrc && (
+        <div className="hidden">
+          <ReactHowler
+            src={soundSrc}
+            playing={playSound}
+            onEnd={() => setPlaySound(false)}
+          />
+        </div>
+      )}
       <div className="flex flex-col gap-4">
         {translationColumn.map((item) => (
           <Card
@@ -133,9 +154,13 @@ export const MatchGame = () => {
             text={item.text}
             rest={rest.length}
             onClick={() => {
+              if (selected.translation === item.id)
+                setSelected({ ...selected, translation: undefined });
+
               if (selected.translation) return;
               setSelected({ ...selected, translation: item.id });
             }}
+            isIncorrect={isIncorrect}
             isMatched={matchedIds.includes(item.id)}
             isSelected={selected.translation === item.id}
           />
@@ -148,9 +173,12 @@ export const MatchGame = () => {
             text={item.text}
             rest={rest.length}
             onClick={() => {
+              if (selected.word === item.id)
+                setSelected({ ...selected, word: undefined });
               if (selected.word) return;
               setSelected({ ...selected, word: item.id });
             }}
+            isIncorrect={isIncorrect}
             isMatched={matchedIds.includes(item.id)}
             isSelected={selected.word === item.id}
           />
