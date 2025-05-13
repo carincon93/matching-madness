@@ -185,7 +185,7 @@ export const MatchingGame = ({ pairs }: MatchingGameProps) => {
         <h4
           id="combo-nro"
           key={combo}
-          className={`font-bold font text-pink-600 text-xl absolute top-32 left-0 right-0 mx-auto z-50 items-center justify-center gap-2 ${
+          className={`font-bold font text-pink-600 text-xl absolute top-42 left-0 right-0 mx-auto z-50 items-center justify-center gap-2 ${
             combo ? "animate-fade-in flex" : "animate-fade-out hidden"
           }`}
           onAnimationEnd={() => {
@@ -205,7 +205,7 @@ export const MatchingGame = ({ pairs }: MatchingGameProps) => {
           Combo <span>{combo}x</span>
         </h4>
       )}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-4 mt-20">
         {soundSrc && (
           <div className="hidden">
             <ReactHowler

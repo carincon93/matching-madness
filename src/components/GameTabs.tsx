@@ -30,6 +30,7 @@ export const GameTabs = () => {
 
   useEffect(() => {
     if (!selectedWeek) return;
+
     setOpenDialog(false);
 
     setPairsByWeek(getPairsByWeek(selectedWeek));
@@ -46,17 +47,16 @@ export const GameTabs = () => {
               the word list.
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <Select>
+          <Select
+            value={selectedWeek?.toString()}
+            onValueChange={(value) => setSelectedWeek(Number(value))}
+          >
             <SelectTrigger className="w-full bg-white">
               <SelectValue placeholder="Week" />
             </SelectTrigger>
             <SelectContent>
               {Array.from({ length: 30 }, (_, i) => i + 1).map((week) => (
-                <SelectItem
-                  key={week}
-                  value={week.toString()}
-                  onClick={() => setSelectedWeek(week)}
-                >
+                <SelectItem key={week} value={week.toString()}>
                   Week {week}
                 </SelectItem>
               ))}
@@ -69,7 +69,9 @@ export const GameTabs = () => {
       {selectedWeek && (
         <Tabs defaultValue="list" className="w-full">
           <TabsList>
-            <TabsTrigger value="game"><Play /> Game</TabsTrigger>
+            <TabsTrigger value="game">
+              <Play /> Game
+            </TabsTrigger>
             <TabsTrigger value="list">All words</TabsTrigger>
           </TabsList>
           <TabsContent value="game">
