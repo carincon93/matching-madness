@@ -12,15 +12,13 @@ import {
 } from "@/components/ui/select";
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Play } from "lucide-react";
 
 export const GameTabs = () => {
   const [pairsByWeek, setPairsByWeek] = useState<Pair[]>([]);
@@ -64,18 +62,15 @@ export const GameTabs = () => {
               ))}
             </SelectContent>
           </Select>
-          <AlertDialogFooter>
-            {/* <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction>Continue</AlertDialogAction> */}
-          </AlertDialogFooter>
+          <AlertDialogFooter></AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
 
       {selectedWeek && (
         <Tabs defaultValue="list" className="w-full">
           <TabsList>
-            <TabsTrigger value="game">Game</TabsTrigger>
-            <TabsTrigger value="list">List</TabsTrigger>
+            <TabsTrigger value="game"><Play /> Game</TabsTrigger>
+            <TabsTrigger value="list">All words</TabsTrigger>
           </TabsList>
           <TabsContent value="game">
             <MatchingGame pairs={pairsByWeek} />

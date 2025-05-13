@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import { Card } from "./Card";
 import ReactHowler from "react-howler";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 type Pair = {
   id: string;
@@ -26,7 +33,9 @@ export const MatchingGame = ({ pairs }: MatchingGameProps) => {
   const [combo, setCombo] = useState<number>(0);
   const [queueIndex, setQueueIndex] = useState<number>(0);
   const [correctPairs, setCorrectPairs] = useState<number>(0);
+  const [maxCombo, setMaxCombo] = useState<number>(0);
   const [isIncorrect, setIsIncorrect] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
   const [translationColumn, setTranslationColumn] = useState<CardItem[]>([]);
   const [wordColumn, setRightColumn] = useState<CardItem[]>([]);
   const [selected, setSelected] = useState<{
@@ -68,9 +77,9 @@ export const MatchingGame = ({ pairs }: MatchingGameProps) => {
   useEffect(() => {
     if (!selected.translation || !selected.word) return;
     setPlaySound(false);
-    setCombo((prev) => prev + 1);
 
     if (selected.translation === selected.word) {
+      setCombo((prev) => prev + 1);
       setPlaySound(true);
       setCorrectPairs((prev) => prev + 1);
 
@@ -109,6 +118,12 @@ export const MatchingGame = ({ pairs }: MatchingGameProps) => {
       setMatchedIds((prev) =>
         selected.translation ? [...prev, selected.translation] : prev
       );
+
+      setMaxCombo((prev) => (prev + 1 > combo + 1 ? prev : combo + 1));
+
+      if (matchedIds.length + 2 === pairs.length) {
+        setShowModal(true);
+      }
     } else {
       setIsIncorrect(true);
       setCombo(0);
@@ -133,32 +148,63 @@ export const MatchingGame = ({ pairs }: MatchingGameProps) => {
     setCorrectPairs(0);
   }, [correctPairs]);
 
+
   return (
     <div>
-      {/* {combo > 4 && ( */}
-      <h4
-        id="combo-nro"
-        key={combo}
-        className={`font-bold font text-pink-600 text-xl absolute top-20 left-0 right-0 mx-auto z-50 items-center justify-center gap-2 ${
-          combo ? "animate-fade-in flex" : "animate-fade-out hidden"
-        }`}
-        onAnimationEnd={() => {
-          const element = document.querySelector("#combo-nro");
-          if (element) {
-            setTimeout(() => {
-              element.classList.remove("animate-fade-in");
-              element.classList.add("animate-fade-out");
-            }, 300);
+      <Dialog open={showModal} onOpenChange={setShowModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Congratulations! 🎉</DialogTitle>
+            <DialogDescription>
+              You've successfully matched all the pairs! Below you can review
+              all the word pairs:
+            </DialogDescription>
+          </DialogHeader>
+          <div>
+            <p className="font text-center mb-2">
+              Max Combo: <strong>{maxCombo}x</strong>
+            </p>
+            <ul className="h-[400px] overflow-y-auto space-y-2">
+              {pairs
+                .toSorted((a, b) => a.word.localeCompare(b.word))
+                .map((pair) => (
+                  <li
+                    key={pair.id}
+                    className="flex gap-2 p-2 border rounded-md justify-between"
+                  >
+                    <span className="font-bold">{pair.word}</span>
+                    <span>{pair.translation}</span>
+                  </li>
+                ))}
+            </ul>
+          </div>
+        </DialogContent>
+      </Dialog>
 
-            setTimeout(() => {
-              element.classList.add("hidden");
-            }, 800);
-          }
-        }}
-      >
-        Combo <span>{combo}x</span>
-      </h4>
-      {/* )} */}
+      {combo > 4 && (
+        <h4
+          id="combo-nro"
+          key={combo}
+          className={`font-bold font text-pink-600 text-xl absolute top-32 left-0 right-0 mx-auto z-50 items-center justify-center gap-2 ${
+            combo ? "animate-fade-in flex" : "animate-fade-out hidden"
+          }`}
+          onAnimationEnd={() => {
+            const element = document.querySelector("#combo-nro");
+            if (element) {
+              setTimeout(() => {
+                element.classList.remove("animate-fade-in");
+                element.classList.add("animate-fade-out");
+              }, 300);
+
+              setTimeout(() => {
+                element.classList.add("hidden");
+              }, 800);
+            }
+          }}
+        >
+          Combo <span>{combo}x</span>
+        </h4>
+      )}
       <div className="grid grid-cols-2 gap-4">
         {soundSrc && (
           <div className="hidden">

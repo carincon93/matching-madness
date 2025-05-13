@@ -2,6 +2,7 @@
 import Layout from "@/layouts/Layout.astro";
 import { GameTabs } from "@/components/GameTabs";
 import background from "@/assets/background.svg";
+import Cards from "@/assets/cards.svg";
 
 import "@/styles/global.css";
 
@@ -15,6 +16,7 @@ import "@/styles/global.css";
   <div
     class="md:w-6/12 md:p-0 p-4 mx-auto h-screen flex flex-col justify-center relative"
   >
+    <Cards class="mx-auto" />
     <GameTabs client:load />
   </div>
 </Layout>
