@@ -11,13 +11,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export const GameTabs = () => {
   const [pairsByWeek, setPairsByWeek] = useState<Pair[]>([]);
@@ -36,15 +39,15 @@ export const GameTabs = () => {
 
   return (
     <div>
-      <Dialog open={openDialog} onOpenChange={setOpenDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Select a Week</DialogTitle>
-            <DialogDescription>
+      <AlertDialog open={openDialog} onOpenChange={setOpenDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Select a Week</AlertDialogTitle>
+            <AlertDialogDescription>
               Please select a week to start playing the matching game or view
               the word list.
-            </DialogDescription>
-          </DialogHeader>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
           <Select>
             <SelectTrigger className="w-full bg-white">
               <SelectValue placeholder="Week" />
@@ -61,8 +64,12 @@ export const GameTabs = () => {
               ))}
             </SelectContent>
           </Select>
-        </DialogContent>
-      </Dialog>
+          <AlertDialogFooter>
+            {/* <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction>Continue</AlertDialogAction> */}
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       {selectedWeek && (
         <Tabs defaultValue="list" className="w-full">
